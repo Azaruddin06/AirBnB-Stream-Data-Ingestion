@@ -1,0 +1,26 @@
+version: 0.2
+phases:
+  # install:
+  #   runtime-versions:
+  #     python: 3.12
+  build:
+    commands:
+      - echo "Zipping deployment package..."
+      - cd lib
+      - zip -r9 ../deployment_consumer_package.zip 
+      - zip -r9 ../deployment_producer_package.zip
+      - cd ..
+      - zip -g deployment_consumer_package.zip Consumer_lambda.py
+      - zip -g deployment_producer_package.zip Producer_lamda.py
+  post_build:
+    commands:
+      - echo "Uploading to S3..."
+      - aws s3 cp deployment_producer_package.zip s3://1-lambdaassignment/
+      - echo "Updating Lambda function via S3..."
+      - aws lambda update-function-code --function-name ProduceAirbnbBookingData --s3-bucket 1-lambdaassignment --s3-key deployment_producer_package.zip
+      - echo "Deployment complete Succesfully Now!"
+      - aws s3 cp deployment_consumer_package.zip s3://1-lambdaassignment/
+      - echo "Updating Lambda function via S3..."
+      - aws lambda update-function-code --function-name ProcessFilteredBookings --s3-bucket 1-lambdaassignment --s3-key deployment_consumer_package.zip
+      - echo "Deployment complete Succesfully Now!"
+     
