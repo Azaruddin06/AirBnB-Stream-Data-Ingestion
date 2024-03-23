@@ -6,12 +6,8 @@ phases:
   build:
     commands:
       - echo "Zipping deployment package..."
-      - zip -r9 deployment_consumer_package.zip 
-      - cd ..
-      - zip -g deployment_consumer_package.zip Consumer_lambda.py
-      - zip -r9 deployment_producer_package.zip
-      - cd ..
-      - zip -g deployment_producer_package.zip Producer_lamda.py
+      - zip  deployment_consumer_package.zip Consumer_lambda.py
+      - zip  deployment_producer_package.zip Producer_lamda.py
   post_build:
     commands:
       - echo "Uploading to S3..."
